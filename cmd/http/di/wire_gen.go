@@ -21,7 +21,7 @@ func InitContainer() (*Container, func(), error) {
 	appConfig := config.ProvideCofig()
 	pingHandler := ping.ProvidePingHandler()
 	handlers := &handler.Handlers{
-		Ping: pingHandler,
+		PingHandler: pingHandler,
 	}
 	httpServer := server.ProvideHTTPServer(appConfig, handlers)
 	container := &Container{

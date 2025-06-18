@@ -15,16 +15,14 @@ import (
 )
 
 type HTTPServer struct {
-	cfg     *config.AppConfig
-	Gin     *gin.Engine
-	Srv     *http.Server
-	Handler *handler.Handlers
+	cfg *config.AppConfig
+	Gin *gin.Engine
+	Srv *http.Server
 }
 
 func (s *HTTPServer) Serve() {
 	g := &run.Group{}
 	g.Add(func() error {
-		s.Handler.RegisterRoute(s.Gin)
 		s.Srv = &http.Server{
 			Addr:    fmt.Sprintf(":%s", s.cfg.System.Port),
 			Handler: s.Gin.Handler(),
@@ -45,12 +43,21 @@ func (s *HTTPServer) Serve() {
 	}
 }
 
+func (s *HTTPServer) load(h *handler.Handlers) {
+	registerRouter(s.Gin, h)
+}
+
 func ProvideHTTPServer(cfg *config.AppConfig, h *handler.Handlers) *HTTPServer {
 	sv := &HTTPServer{
-		cfg:     cfg,
-		Gin:     gin.New(),
-		Srv:     &http.Server{},
-		Handler: h,
+		cfg: cfg,
+		Gin: gin.New(),
+		Srv: &http.Server{},
 	}
+
+	sv.load(h)
+
+	sv.Gin.Use(gin.Logger())
+	sv.Gin.Use(gin.Recovery())
+
 	return sv
 }
