@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package go_template.ping_pong.v1;
+
+option go_package = "./proto/gen/go_template/ping_pong/v1";
+
+
+service PingPongService {
+    rpc StartPingPong(StartPingPongRequest) returns (StartPingPongResponse);
+}
+
+message StartPingPongRequest {
+    string message = 1;
+}
+
+message StartPingPongResponse {
+    string message = 1;
+}

@@ -11,7 +11,8 @@ import (
 )
 
 type SystemConfig struct {
-	Port        string `envconfig:"APP_HTTP_PORT" default:"8080"`
+	HTTPPort    string `envconfig:"APP_HTTP_PORT" default:"8080"`
+	GRPCPort    string `envconfig:"APP_GRPC_PORT" default:"8980"`
 	ServiceName string `envconfig:"SERVICE_NAME" default:"go-template"`
 }
 

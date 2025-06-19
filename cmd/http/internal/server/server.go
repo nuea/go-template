@@ -24,7 +24,7 @@ func (s *HTTPServer) Serve() {
 	g := &run.Group{}
 	g.Add(func() error {
 		s.Srv = &http.Server{
-			Addr:    fmt.Sprintf(":%s", s.cfg.System.Port),
+			Addr:    fmt.Sprintf(":%s", s.cfg.System.HTTPPort),
 			Handler: s.Gin.Handler(),
 		}
 		log.Println("HTTP Server - started at ip address", s.Srv.Addr)
