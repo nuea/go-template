@@ -2,15 +2,15 @@ package handler
 
 import (
 	"github.com/google/wire"
-	"github.com/nuea/go-template/cmd/http/internal/handler/ping"
+	"github.com/nuea/go-template/cmd/http/internal/handler/pingpong"
 )
 
 type Handlers struct {
-	PingHandler *ping.Handler
+	PingHandler *pingpong.Handler
 }
 
 var HandlerSet = wire.NewSet(
-	ping.ProvidePingHandler,
+	pingpong.ProvidePingHandler,
 
 	wire.Struct(new(Handlers), "*"),
 )

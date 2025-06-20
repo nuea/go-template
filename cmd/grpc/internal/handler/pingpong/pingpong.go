@@ -2,6 +2,7 @@ package pingpong
 
 import (
 	"context"
+	"log"
 
 	pingpongv1 "github.com/nuea/go-template/proto/gen/go_template/ping_pong/v1"
 	"google.golang.org/grpc/codes"
@@ -17,6 +18,7 @@ func ProvidePingPongGRPCService() (pingpongv1.PingPongServiceServer, error) {
 }
 
 func (g *grpcService) StartPingPong(ctx context.Context, req *pingpongv1.StartPingPongRequest) (*pingpongv1.StartPingPongResponse, error) {
+	log.Println("GRPC request server - ", "request:", req)
 	if req.Message == "" {
 		return nil, status.Error(codes.InvalidArgument, "message cannot be empty")
 	}

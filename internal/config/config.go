@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
@@ -16,12 +17,19 @@ type SystemConfig struct {
 	ServiceName string `envconfig:"SERVICE_NAME" default:"go-template"`
 }
 
+type GoTemplateGRPCConfig struct {
+	GRPCTarget     string        `envconfig:"GO_TEMPLATE_GRPC_TARGET" default:"dns://go-template"`
+	RequestTimeout time.Duration `envconfig:"GO_TEMPLATE_REQUEST_TIMEOUT" default:"10s"`
+}
+
 type AppConfig struct {
-	System SystemConfig
+	System     SystemConfig
+	GoTemplate GoTemplateGRPCConfig
 }
 
 func (cfg *AppConfig) load() {
 	envconfig.MustProcess("", &cfg.System)
+	envconfig.MustProcess("", &cfg.GoTemplate)
 }
 
 func ProvideCofig() *AppConfig {

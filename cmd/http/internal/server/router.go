@@ -8,7 +8,7 @@ import (
 func registerRouter(gin *gin.Engine, h *handler.Handlers) {
 	router := *gin.Group("/api/v1")
 	{
-		router.GET("/ping", h.PingHandler.Ping)
+		router.POST("/ping", h.PingHandler.PingPong)
 	}
 
 }

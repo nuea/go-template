@@ -9,8 +9,10 @@ package di
 import (
 	"github.com/google/wire"
 	"github.com/nuea/go-template/cmd/http/internal/handler"
-	"github.com/nuea/go-template/cmd/http/internal/handler/ping"
+	"github.com/nuea/go-template/cmd/http/internal/handler/pingpong"
 	"github.com/nuea/go-template/cmd/http/internal/server"
+	"github.com/nuea/go-template/internal/client"
+	"github.com/nuea/go-template/internal/client/go_template"
 	"github.com/nuea/go-template/internal/config"
 	"github.com/nuea/go-template/internal/di"
 )
@@ -19,11 +21,19 @@ import (
 
 func InitContainer() (*Container, func(), error) {
 	appConfig := config.ProvideCofig()
-	pingHandler := ping.ProvidePingHandler()
-	handlers := &handler.Handlers{
-		PingHandler: pingHandler,
+	apiClient := gotemplate.ProvideGoTemplateServiceGRPC(appConfig)
+	pingPongServiceClient := gotemplate.ProvidePingPongServiceClient(apiClient)
+	goTemplateGRPCService := &gotemplate.GoTemplateGRPCService{
+		PingPongServiceClient: pingPongServiceClient,
 	}
-	httpServer := server.ProvideHTTPServer(appConfig, handlers)
+	clientClient := &client.Client{
+		GoTemplateGRPCService: goTemplateGRPCService,
+	}
+	pingpongHandler := pingpong.ProvidePingHandler(clientClient)
+	handlers := &handler.Handlers{
+		PingHandler: pingpongHandler,
+	}
+	httpServer := server.ProvideHTTPServer(appConfig, handlers, clientClient)
 	container := &Container{
 		server: httpServer,
 	}
